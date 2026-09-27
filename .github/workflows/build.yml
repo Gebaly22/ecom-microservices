@@ -1,0 +1,44 @@
+name: Build and Test All Services
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-user:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+      - name: Build User Service
+        working-directory: ./user/user
+        run: ./mvnw clean install -DskipTests
+
+  build-product:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+      - name: Build Product Service
+        working-directory: ./product/product
+        run: ./mvnw clean install -DskipTests
+
+  build-order:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+      - name: Build Order Service
+        working-directory: ./order/order
+        run: ./mvnw clean install -DskipTests
