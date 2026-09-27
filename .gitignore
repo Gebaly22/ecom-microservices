@@ -1,0 +1,7 @@
+ecom-application/
+target/
+.idea/
+*.iml
+.mvn/
+.env
+*.log

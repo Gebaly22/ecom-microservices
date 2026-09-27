@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/userdb
+    username: embarkx
+    password: embarkx
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8082
