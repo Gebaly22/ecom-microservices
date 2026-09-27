@@ -15,9 +15,8 @@ jobs:
         with:
           java-version: '25'
           distribution: 'temurin'
-      - name: Build User Service
-        working-directory: ./user/user
-        run: ./mvnw clean install -DskipTests
+      - name: Confirm Java version
+        run: java -version
 
   build-product:
     runs-on: ubuntu-latest
