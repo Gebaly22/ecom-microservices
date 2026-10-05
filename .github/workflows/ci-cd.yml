@@ -12,7 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [user, product, order]
+        include:
+          - { service: user, db: userdb }
+          - { service: product, db: product }
+          - { service: order, db: order }
 
     services:
       postgres:
@@ -20,7 +23,7 @@ jobs:
         env:
           POSTGRES_USER: embarkx
           POSTGRES_PASSWORD: embarkx
-          POSTGRES_DB: testdb
+          POSTGRES_DB: ${{ matrix.db }}
         ports:
           - 5432:5432
         options: >-
@@ -39,7 +42,7 @@ jobs:
 
       - name: Run Tests
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/${{ matrix.service == 'user' && 'userdb' || matrix.service == 'product' && 'product' || 'order' }}
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/${{ matrix.db }}
           SPRING_DATASOURCE_USERNAME: embarkx
           SPRING_DATASOURCE_PASSWORD: embarkx
         run: |
@@ -90,8 +93,9 @@ jobs:
 
   deploy:
     name: Deploy to Production
+    # enable when server + secrets exist
+    if: false
     needs: docker
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
     steps:
