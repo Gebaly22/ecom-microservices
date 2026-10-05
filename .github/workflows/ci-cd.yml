@@ -75,6 +75,9 @@ jobs:
           cd ./${{ matrix.service }}/${{ matrix.service }}
           ./mvnw -B clean package -DskipTests
 
+      - name: Set Lowercase Owner
+        run: echo "OWNER=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
+
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
@@ -88,8 +91,8 @@ jobs:
           context: ./${{ matrix.service }}/${{ matrix.service }}
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ matrix.service }}-service:latest
-            ghcr.io/${{ github.repository_owner }}/${{ matrix.service }}-service:${{ github.sha }}
+            ghcr.io/${{ env.OWNER }}/${{ matrix.service }}-service:latest
+            ghcr.io/${{ env.OWNER }}/${{ matrix.service }}-service:${{ github.sha }}
 
   deploy:
     name: Deploy to Production

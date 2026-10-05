@@ -15,7 +15,7 @@ services:
       retries: 5
 
   user-service:
-    image: ghcr.io/${GITHUB_REPOSITORY}/user-service:${IMAGE_TAG:-latest}
+    image: ghcr.io/gebaly22/user-service:${IMAGE_TAG:-latest}
     ports:
       - "8082:8082"
     environment:
@@ -27,7 +27,7 @@ services:
         condition: service_healthy
 
   product-service:
-    image: ghcr.io/${GITHUB_REPOSITORY}/product-service:${IMAGE_TAG:-latest}
+    image: ghcr.io/gebaly22/product-service:${IMAGE_TAG:-latest}
     ports:
       - "8081:8081"
     environment:
@@ -39,7 +39,7 @@ services:
         condition: service_healthy
 
   order-service:
-    image: ghcr.io/${GITHUB_REPOSITORY}/order-service:${IMAGE_TAG:-latest}
+    image: ghcr.io/gebaly22/order-service:${IMAGE_TAG:-latest}
     ports:
       - "8083:8083"
     environment:
