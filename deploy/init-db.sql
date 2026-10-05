@@ -1,0 +1,3 @@
+CREATE DATABASE userdb;
+CREATE DATABASE product;
+CREATE DATABASE "order";

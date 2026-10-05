@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  user-service:
+    image: ghcr.io/${GITHUB_REPOSITORY}/user-service:${IMAGE_TAG:-latest}
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/userdb
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  product-service:
+    image: ghcr.io/${GITHUB_REPOSITORY}/product-service:${IMAGE_TAG:-latest}
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/product
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  order-service:
+    image: ghcr.io/${GITHUB_REPOSITORY}/order-service:${IMAGE_TAG:-latest}
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/order
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
